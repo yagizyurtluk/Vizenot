@@ -1,12 +1,19 @@
 import streamlit as st
 import pandas as pd
 
+# GitHub Bağlantıları
+st.sidebar.title("📂 GitHub Projelerim")
+st.sidebar.markdown("[📚 Öğrenci Yönetim Sistemi](https://github.com/kullanici/ogrenci-yonetim-sistemi)")
+st.sidebar.markdown("[🚀 Proje 2](https://github.com/kullanici/proje-2)")
+st.sidebar.markdown("[🔧 Proje 3](https://github.com/kullanici/proje-3)")
+
 # Öğrenci Sınıfı
 class Ogrenci:
-    def __init__(self, id, adi, soyadi, vizenot, finalnot):
+    def __init__(self, id, adi, soyadi, sinifi, vizenot, finalnot):
         self.id = id
         self.adi = adi
         self.soyadi = soyadi
+        self.sinifi = sinifi
         self.vizenot = vizenot
         self.finalnot = finalnot
         self.ortalama = round((vizenot * 0.4) + (finalnot * 0.6), 2)
@@ -16,6 +23,7 @@ class Ogrenci:
             "ID": self.id,
             "Adı": self.adi,
             "Soyadı": self.soyadi,
+            "Sınıfı": self.sinifi,
             "Vize Notu": self.vizenot,
             "Final Notu": self.finalnot,
             "Ortalama": self.ortalama
@@ -23,10 +31,10 @@ class Ogrenci:
 
 # Öğrenci Verileri
 students = [
-    Ogrenci(1, "Ahmet", "Yılmaz", 40, 60),
-    Ogrenci(2, "Ayşe", "Kara", 70, 80),
-    Ogrenci(3, "Mehmet", "Demir", 50, 90),
-    Ogrenci(4, "Elif", "Çelik", 30, 50)
+    Ogrenci(1, "Ahmet", "Yılmaz", "10A", 40, 60),
+    Ogrenci(2, "Ayşe", "Kara", "11B", 70, 80),
+    Ogrenci(3, "Mehmet", "Demir", "12C", 50, 90),
+    Ogrenci(4, "Elif", "Çelik", "9A", 30, 50)
 ]
 
 # DataFrame oluşturma
@@ -36,36 +44,8 @@ df = pd.DataFrame(data)
 # Streamlit Arayüzü
 st.title("📚 Öğrenci Yönetim Sistemi")
 
-# Sol Panel: Projeler
-st.sidebar.title("📁 Projelerim")
-project_names = ["Proje 1", "Proje 2", "Proje 3"]
-github_links = {
-    "Proje 1": "https://github.com/yagizyurtluk/Vizenot",
-    "Proje 2": "https://github.com/yagizyurtluk/Python",
-    "Proje 3": "https://github.com/yagizyurtluk/AnotherProject",  # Yeni projeyi buraya ekledim
-}
-
-# Proje seçimi
-selected_project = st.sidebar.selectbox("Diğer Projelerim", project_names)
-
-# GitHub bağlantısını seçilen projeyle uyumlu hale getirme
-st.sidebar.write(f"Seçilen Proje: {selected_project}")
-st.sidebar.write(f"[GitHub Linki]({github_links[selected_project]})")
-
 menu = st.sidebar.radio("📋 Menü", ["Tüm Öğrenciler", "ID ile Öğrenci Bul", "Yeni Öğrenci Ekle"])
 
-# Projeye özgü içerikler
-if selected_project == "Proje 1":
-    st.subheader("Proje 1 İçeriği")
-    st.write("Proje 1 hakkında açıklamalar ve içerikler buraya gelecek.")
-elif selected_project == "Proje 2":
-    st.subheader("Proje 2 İçeriği")
-    st.write("Proje 2 hakkında açıklamalar ve içerikler buraya gelecek.")
-elif selected_project == "Proje 3":
-    st.subheader("Proje 3 İçeriği")
-    st.write("Proje 3 hakkında açıklamalar ve içerikler buraya gelecek.")
-
-# Menüye göre öğrenci işlemleri
 if menu == "Tüm Öğrenciler":
     st.subheader("👩‍🎓 Tüm Öğrenciler")
     st.dataframe(df, use_container_width=True)
@@ -84,16 +64,19 @@ elif menu == "Yeni Öğrenci Ekle":
     st.subheader("➕ Yeni Öğrenci Ekle")
     adı = st.text_input("Adı")
     soyadı = st.text_input("Soyadı")
+    sınıfı = st.text_input("Sınıfı")
     vizenot = st.number_input("Vize Notu", min_value=0, max_value=100, step=1)
     finalnot = st.number_input("Final Notu", min_value=0, max_value=100, step=1)
 
     if st.button("Ekle"):
-        if adı and soyadı:
+        if adı and soyadı and sınıfı:
             new_id = max([student.id for student in students]) + 1
-            new_student = Ogrenci(new_id, adı, soyadı, vizenot, finalnot)
+            new_student = Ogrenci(new_id, adı, soyadı, sınıfı, vizenot, finalnot)
             students.append(new_student)
             df.loc[len(df)] = new_student.to_dict()
             st.success("✅ Yeni öğrenci başarıyla eklendi!")
             st.dataframe(df, use_container_width=True)
         else:
             st.error("⚠️ Lütfen tüm alanları doldurunuz!")
+
+# Not: Kalıcı veri kaydı için bir veritabanı veya dosya sistemi entegrasyonu gerekir.
