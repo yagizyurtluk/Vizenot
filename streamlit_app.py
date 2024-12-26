@@ -39,10 +39,17 @@ st.title("📚 Öğrenci Yönetim Sistemi")
 # Sol Panel: Projeler
 st.sidebar.title("📁 Projelerim")
 project_names = ["Proje 1", "Proje 2", "Proje 3"]
+github_links = {
+    "Proje 1": "https://github.com/yourusername/proje1",
+    "Proje 2": "https://github.com/yourusername/proje2",
+    "Proje 3": "https://github.com/yourusername/proje3"
+}
+
 selected_project = st.sidebar.selectbox("Diğer Projelerim", project_names)
 
 if selected_project:
     st.sidebar.write(f"Seçilen Proje: {selected_project}")
+    st.sidebar.write(f"[GitHub Linki]({github_links[selected_project]})")
 
 menu = st.sidebar.radio("📋 Menü", ["Tüm Öğrenciler", "ID ile Öğrenci Bul", "Yeni Öğrenci Ekle"])
 
