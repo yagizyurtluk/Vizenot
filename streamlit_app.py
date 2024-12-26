@@ -36,11 +36,13 @@ df = pd.DataFrame(data)
 # Streamlit Arayüzü
 st.title("📚 Öğrenci Yönetim Sistemi")
 
-# Sol Panel: GitHub Linki
+# Sol Panel: Projeler
 st.sidebar.title("📁 Projelerim")
-github_link = st.sidebar.text_input("GitHub Linkinizi Girin", "https://github.com/username")
-if github_link:
-    st.sidebar.markdown(f"[GitHub Profilim]({github_link})")
+project_names = ["Proje 1", "Proje 2", "Proje 3"]
+selected_project = st.sidebar.selectbox("Diğer Projelerim", project_names)
+
+if selected_project:
+    st.sidebar.write(f"Seçilen Proje: {selected_project}")
 
 menu = st.sidebar.radio("📋 Menü", ["Tüm Öğrenciler", "ID ile Öğrenci Bul", "Yeni Öğrenci Ekle"])
 
