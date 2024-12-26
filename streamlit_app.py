@@ -3,8 +3,8 @@ import pandas as pd
 
 # GitHub Bağlantıları
 st.sidebar.title("📂 GitHub Projelerim")
-st.sidebar.markdown("[📚 Öğrenci Yönetim Sistemi](https://github.com/yagizyurtluk/vizenot)")
-st.sidebar.markdown("[🚀 Proje 2](https://github.com/yagizyurtluk/python)")
+st.sidebar.markdown("[📚 Öğrenci Yönetim Sistemi](https://vizenot.streamlit.app)")
+st.sidebar.markdown("[🚀 Proje 2](https://allpython.streamlit.app)")
 
 # Öğrenci Sınıfı
 class Ogrenci:
