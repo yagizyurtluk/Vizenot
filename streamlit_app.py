@@ -54,6 +54,18 @@ st.sidebar.write(f"[GitHub Linki]({github_links[selected_project]})")
 
 menu = st.sidebar.radio("📋 Menü", ["Tüm Öğrenciler", "ID ile Öğrenci Bul", "Yeni Öğrenci Ekle"])
 
+# Projeye özgü içerikler
+if selected_project == "Proje 1":
+    st.subheader("Proje 1 İçeriği")
+    st.write("Proje 1 hakkında açıklamalar ve içerikler buraya gelecek.")
+elif selected_project == "Proje 2":
+    st.subheader("Proje 2 İçeriği")
+    st.write("Proje 2 hakkında açıklamalar ve içerikler buraya gelecek.")
+elif selected_project == "Proje 3":
+    st.subheader("Proje 3 İçeriği")
+    st.write("Proje 3 hakkında açıklamalar ve içerikler buraya gelecek.")
+
+# Menüye göre öğrenci işlemleri
 if menu == "Tüm Öğrenciler":
     st.subheader("👩‍🎓 Tüm Öğrenciler")
     st.dataframe(df, use_container_width=True)
