@@ -2,9 +2,6 @@ import streamlit as st
 import pandas as pd
 
 # Öğrenci Sınıfı
-def calculate_average(vize, final):
-    return round((vize * 0.4) + (final * 0.6), 2)
-
 class Ogrenci:
     def __init__(self, id, adi, soyadi, sinifi, vizenot, finalnot):
         self.id = id
@@ -13,17 +10,17 @@ class Ogrenci:
         self.sinifi = sinifi
         self.vizenot = vizenot
         self.finalnot = finalnot
-        self.ortalama = calculate_average(vizenot, finalnot)
+        self.ortalama = round((vizenot * 0.4) + (finalnot * 0.6), 2)
 
     def to_dict(self):
         return {
-            "id": self.id,
-            "adı": self.adi,
-            "soyadı": self.soyadi,
-            "sınıfı": self.sinifi,
-            "vizenot": self.vizenot,
-            "finalnot": self.finalnot,
-            "ortalama": self.ortalama
+            "ID": self.id,
+            "Adı": self.adi,
+            "Soyadı": self.soyadi,
+            "Sınıfı": self.sinifi,
+            "Vize Notu": self.vizenot,
+            "Final Notu": self.finalnot,
+            "Ortalama": self.ortalama
         }
 
 # Öğrenci Verileri
@@ -34,32 +31,31 @@ students = [
     Ogrenci(4, "Elif", "Çelik", "9A", 30, 50)
 ]
 
-data = [student.to_dict() for student in students]
-
 # DataFrame oluşturma
+data = [student.to_dict() for student in students]
 df = pd.DataFrame(data)
 
 # Streamlit Arayüzü
-st.title("Öğrenci Yönetim Sistemi")
+st.title("📚 Öğrenci Yönetim Sistemi")
 
-menu = st.sidebar.selectbox("Menü", ["Tüm Öğrenciler", "ID ile Öğrenci Bul", "Yeni Öğrenci Ekle"])
+menu = st.sidebar.radio("📋 Menü", ["Tüm Öğrenciler", "ID ile Öğrenci Bul", "Yeni Öğrenci Ekle"])
 
 if menu == "Tüm Öğrenciler":
-    st.subheader("Tüm Öğrenciler")
-    st.dataframe(df)
+    st.subheader("👩‍🎓 Tüm Öğrenciler")
+    st.dataframe(df, use_container_width=True)
 
 elif menu == "ID ile Öğrenci Bul":
-    st.subheader("ID ile Öğrenci Verilerini Getir")
+    st.subheader("🔍 ID ile Öğrenci Verilerini Getir")
     student_id = st.number_input("Öğrenci ID Giriniz", min_value=1, step=1)
-    student = df[df['id'] == student_id]
+    student = df[df['ID'] == student_id]
 
     if not student.empty:
-        st.write(student)
+        st.table(student)
     else:
-        st.warning("Bu ID'ye ait öğrenci bulunamadı!")
+        st.warning("❌ Bu ID'ye ait öğrenci bulunamadı!")
 
 elif menu == "Yeni Öğrenci Ekle":
-    st.subheader("Yeni Öğrenci Ekle")
+    st.subheader("➕ Yeni Öğrenci Ekle")
     adı = st.text_input("Adı")
     soyadı = st.text_input("Soyadı")
     sınıfı = st.text_input("Sınıfı")
@@ -67,11 +63,14 @@ elif menu == "Yeni Öğrenci Ekle":
     finalnot = st.number_input("Final Notu", min_value=0, max_value=100, step=1)
 
     if st.button("Ekle"):
-        new_id = max([student.id for student in students]) + 1
-        new_student = Ogrenci(new_id, adı, soyadı, sınıfı, vizenot, finalnot)
-        students.append(new_student)
-        df.loc[len(df)] = new_student.to_dict()
-        st.success("Yeni öğrenci başarıyla eklendi!")
-        st.dataframe(df)
+        if adı and soyadı and sınıfı:
+            new_id = max([student.id for student in students]) + 1
+            new_student = Ogrenci(new_id, adı, soyadı, sınıfı, vizenot, finalnot)
+            students.append(new_student)
+            df.loc[len(df)] = new_student.to_dict()
+            st.success("✅ Yeni öğrenci başarıyla eklendi!")
+            st.dataframe(df, use_container_width=True)
+        else:
+            st.error("⚠️ Lütfen tüm alanları doldurunuz!")
 
 # Not: Kalıcı veri kaydı için bir veritabanı veya dosya sistemi entegrasyonu gerekir.
