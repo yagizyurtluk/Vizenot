@@ -3,8 +3,14 @@ import pandas as pd
 
 # GitHub Bağlantıları
 st.sidebar.title("📂 GitHub Projelerim")
-st.sidebar.markdown("[📚 Öğrenci Yönetim Sistemi](https://vizenot.streamlit.app)")
-st.sidebar.markdown("[🚀 Proje 2](https://allpython.streamlit.app)")
+selected_project = st.sidebar.selectbox("📂 Proje Seç", ["📚 Öğrenci Yönetim Sistemi", "🚀 Proje 2"])
+
+project_links = {
+    "📚 Öğrenci Yönetim Sistemi": "https://vizenot.streamlit.app",
+    "🚀 Proje 2": "https://allpython.streamlit.app"
+}
+
+st.sidebar.markdown(f"[{selected_project}]({project_links[selected_project]})")
 
 # Öğrenci Sınıfı
 class Ogrenci:
