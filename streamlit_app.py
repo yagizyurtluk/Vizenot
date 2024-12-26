@@ -1,6 +1,11 @@
 import streamlit as st
 import pandas as pd
 
+# GitHub Bağlantıları
+st.sidebar.title("📂 GitHub Projelerim")
+st.sidebar.markdown("[📚 Öğrenci Yönetim Sistemi](https://github.com/kullanici/ogrenci-yonetim-sistemi)")
+st.sidebar.markdown("[🚀 Proje 2](https://github.com/kullanici/proje-2)")
+
 # Öğrenci Sınıfı
 class Ogrenci:
     def __init__(self, id, adi, soyadi, sinifi, vizenot, finalnot):
