@@ -40,8 +40,8 @@ st.title("📚 Öğrenci Yönetim Sistemi")
 st.sidebar.title("📁 Projelerim")
 project_names = ["Proje 1", "Proje 2", "Proje 3"]
 github_links = {
-    "Öğrenci": "https://github.com/yagizyurtluk/Vizenot",
-    "Comment": "https://github.com/yagizyurtluk/Python",
+    "Proje1": "https://github.com/yagizyurtluk/Vizenot",
+    "Proje2": "https://github.com/yagizyurtluk/Python",
 }
 
 selected_project = st.sidebar.selectbox("Diğer Projelerim", project_names)
