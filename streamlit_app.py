@@ -45,11 +45,13 @@ github_links = {
     "Proje 3": "https://github.com/yagizyurtluk/AnotherProject",  # Yeni projeyi buraya ekledim
 }
 
+# Proje seçimi
+selected_project = st.sidebar.selectbox("Diğer Projelerim", project_names)
+
 # GitHub bağlantısını seçilen projeyle uyumlu hale getirme
 if selected_project:
     st.sidebar.write(f"Seçilen Proje: {selected_project}")
     st.sidebar.write(f"[GitHub Linki]({github_links[selected_project]})")
-
 
 menu = st.sidebar.radio("📋 Menü", ["Tüm Öğrenciler", "ID ile Öğrenci Bul", "Yeni Öğrenci Ekle"])
 
