@@ -1,151 +1,77 @@
 import streamlit as st
 import pandas as pd
-import math
-from pathlib import Path
 
-# Set the title and favicon that appear in the Browser's tab bar.
-st.set_page_config(
-    page_title='GDP dashboard',
-    page_icon=':earth_americas:', # This is an emoji shortcode. Could be a URL too.
-)
+# Öğrenci Sınıfı
+def calculate_average(vize, final):
+    return round((vize * 0.4) + (final * 0.6), 2)
 
-# -----------------------------------------------------------------------------
-# Declare some useful functions.
+class Ogrenci:
+    def __init__(self, id, adi, soyadi, sinifi, vizenot, finalnot):
+        self.id = id
+        self.adi = adi
+        self.soyadi = soyadi
+        self.sinifi = sinifi
+        self.vizenot = vizenot
+        self.finalnot = finalnot
+        self.ortalama = calculate_average(vizenot, finalnot)
 
-@st.cache_data
-def get_gdp_data():
-    """Grab GDP data from a CSV file.
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "adı": self.adi,
+            "soyadı": self.soyadi,
+            "sınıfı": self.sinifi,
+            "vizenot": self.vizenot,
+            "finalnot": self.finalnot,
+            "ortalama": self.ortalama
+        }
 
-    This uses caching to avoid having to read the file every time. If we were
-    reading from an HTTP endpoint instead of a file, it's a good idea to set
-    a maximum age to the cache with the TTL argument: @st.cache_data(ttl='1d')
-    """
-
-    # Instead of a CSV on disk, you could read from an HTTP endpoint here too.
-    DATA_FILENAME = Path(__file__).parent/'data/gdp_data.csv'
-    raw_gdp_df = pd.read_csv(DATA_FILENAME)
-
-    MIN_YEAR = 1960
-    MAX_YEAR = 2022
-
-    # The data above has columns like:
-    # - Country Name
-    # - Country Code
-    # - [Stuff I don't care about]
-    # - GDP for 1960
-    # - GDP for 1961
-    # - GDP for 1962
-    # - ...
-    # - GDP for 2022
-    #
-    # ...but I want this instead:
-    # - Country Name
-    # - Country Code
-    # - Year
-    # - GDP
-    #
-    # So let's pivot all those year-columns into two: Year and GDP
-    gdp_df = raw_gdp_df.melt(
-        ['Country Code'],
-        [str(x) for x in range(MIN_YEAR, MAX_YEAR + 1)],
-        'Year',
-        'GDP',
-    )
-
-    # Convert years from string to integers
-    gdp_df['Year'] = pd.to_numeric(gdp_df['Year'])
-
-    return gdp_df
-
-gdp_df = get_gdp_data()
-
-# -----------------------------------------------------------------------------
-# Draw the actual page
-
-# Set the title that appears at the top of the page.
-'''
-# :earth_americas: GDP dashboard
-
-Browse GDP data from the [World Bank Open Data](https://data.worldbank.org/) website. As you'll
-notice, the data only goes to 2022 right now, and datapoints for certain years are often missing.
-But it's otherwise a great (and did I mention _free_?) source of data.
-'''
-
-# Add some spacing
-''
-''
-
-min_value = gdp_df['Year'].min()
-max_value = gdp_df['Year'].max()
-
-from_year, to_year = st.slider(
-    'Which years are you interested in?',
-    min_value=min_value,
-    max_value=max_value,
-    value=[min_value, max_value])
-
-countries = gdp_df['Country Code'].unique()
-
-if not len(countries):
-    st.warning("Select at least one country")
-
-selected_countries = st.multiselect(
-    'Which countries would you like to view?',
-    countries,
-    ['DEU', 'FRA', 'GBR', 'BRA', 'MEX', 'JPN'])
-
-''
-''
-''
-
-# Filter the data
-filtered_gdp_df = gdp_df[
-    (gdp_df['Country Code'].isin(selected_countries))
-    & (gdp_df['Year'] <= to_year)
-    & (from_year <= gdp_df['Year'])
+# Öğrenci Verileri
+students = [
+    Ogrenci(1, "Ahmet", "Yılmaz", "10A", 40, 60),
+    Ogrenci(2, "Ayşe", "Kara", "11B", 70, 80),
+    Ogrenci(3, "Mehmet", "Demir", "12C", 50, 90),
+    Ogrenci(4, "Elif", "Çelik", "9A", 30, 50)
 ]
 
-st.header('GDP over time', divider='gray')
+data = [student.to_dict() for student in students]
 
-''
+# DataFrame oluşturma
+df = pd.DataFrame(data)
 
-st.line_chart(
-    filtered_gdp_df,
-    x='Year',
-    y='GDP',
-    color='Country Code',
-)
+# Streamlit Arayüzü
+st.title("Öğrenci Yönetim Sistemi")
 
-''
-''
+menu = st.sidebar.selectbox("Menü", ["Tüm Öğrenciler", "ID ile Öğrenci Bul", "Yeni Öğrenci Ekle"])
 
+if menu == "Tüm Öğrenciler":
+    st.subheader("Tüm Öğrenciler")
+    st.dataframe(df)
 
-first_year = gdp_df[gdp_df['Year'] == from_year]
-last_year = gdp_df[gdp_df['Year'] == to_year]
+elif menu == "ID ile Öğrenci Bul":
+    st.subheader("ID ile Öğrenci Verilerini Getir")
+    student_id = st.number_input("Öğrenci ID Giriniz", min_value=1, step=1)
+    student = df[df['id'] == student_id]
 
-st.header(f'GDP in {to_year}', divider='gray')
+    if not student.empty:
+        st.write(student)
+    else:
+        st.warning("Bu ID'ye ait öğrenci bulunamadı!")
 
-''
+elif menu == "Yeni Öğrenci Ekle":
+    st.subheader("Yeni Öğrenci Ekle")
+    adı = st.text_input("Adı")
+    soyadı = st.text_input("Soyadı")
+    sınıfı = st.text_input("Sınıfı")
+    vizenot = st.number_input("Vize Notu", min_value=0, max_value=100, step=1)
+    finalnot = st.number_input("Final Notu", min_value=0, max_value=100, step=1)
 
-cols = st.columns(4)
+    if st.button("Ekle"):
+        new_id = max([student.id for student in students]) + 1
+        new_student = Ogrenci(new_id, adı, soyadı, sınıfı, vizenot, finalnot)
+        students.append(new_student)
+        df.loc[len(df)] = new_student.to_dict()
+        st.success("Yeni öğrenci başarıyla eklendi!")
+        st.dataframe(df)
 
-for i, country in enumerate(selected_countries):
-    col = cols[i % len(cols)]
-
-    with col:
-        first_gdp = first_year[first_year['Country Code'] == country]['GDP'].iat[0] / 1000000000
-        last_gdp = last_year[last_year['Country Code'] == country]['GDP'].iat[0] / 1000000000
-
-        if math.isnan(first_gdp):
-            growth = 'n/a'
-            delta_color = 'off'
-        else:
-            growth = f'{last_gdp / first_gdp:,.2f}x'
-            delta_color = 'normal'
-
-        st.metric(
-            label=f'{country} GDP',
-            value=f'{last_gdp:,.0f}B',
-            delta=growth,
-            delta_color=delta_color
-        )
+# Not: Kalıcı veri kaydı için bir veritabanı veya dosya sistemi entegrasyonu gerekir.
