@@ -19,7 +19,7 @@ class Ogrenci:
         self.soyadi = soyadi
         self.vizenot = vizenot
         self.finalnot = finalnot
-        self.ortalama = (vizenot * 0.4) + (finalnot * 0.6), 2)
+        self.ortalama = ((vizenot * 0.4) + (finalnot * 0.6), 2)
 
     def to_dict(self):
         return {
