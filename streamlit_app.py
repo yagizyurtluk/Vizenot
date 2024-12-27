@@ -19,7 +19,7 @@ class Ogrenci:
         self.soyadi = soyadi
         self.vizenot = vizenot
         self.finalnot = finalnot
-        self.ortalama = ((vizenot * 0.4) + (finalnot * 0.6), 2)
+        self.ortalama = round((vizenot * 0.4) + (finalnot * 0.6), 2)  # Hatalı parantez düzeltildi.
 
     def to_dict(self):
         return {
@@ -43,7 +43,7 @@ df = pd.DataFrame(data)
 
 st.title("📚 Öğrenci Yönetim Sistemi")
 
-menu = st.sidebar.radio("📋 Menü", ["Tüm Öğrenciler", "ID ile Öğrenci Bul", "Yeni Öğrenci Ekle"])
+menu = st.sidebar.radio("📋 Menü", ["Tüm Öğrenciler", "ID ile Öğrenci Bul", "Yeni Öğrenci Ekle", "📜 Kaynak Kodları Göster"])
 
 if menu == "Tüm Öğrenciler":
     st.subheader("👩‍🎓 Tüm Öğrenciler")
@@ -77,3 +77,9 @@ elif menu == "Yeni Öğrenci Ekle":
         else:
             st.error("⚠️ Lütfen tüm alanları doldurunuz!")
 
+elif menu == "📜 Kaynak Kodları Göster":
+    st.subheader("📜 Uygulama Kaynak Kodları")
+    if st.button("📂 Kodları Göster"):
+        with open(__file__, "r") as file:
+            code = file.read()
+        st.code(code, language="python")
