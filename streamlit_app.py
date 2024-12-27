@@ -1,8 +1,7 @@
 import streamlit as st
 import pandas as pd
 
-# GitHub Bağlantıları
-st.sidebar.title("📂 GitHub Projelerim")
+st.sidebar.title("📂 Projelerim")
 selected_project = st.sidebar.selectbox("📂 Proje Seç", ["📚 Öğrenci Yönetim Sistemi", "🚀 Proje 2"])
 
 project_links = {
@@ -20,7 +19,7 @@ class Ogrenci:
         self.soyadi = soyadi
         self.vizenot = vizenot
         self.finalnot = finalnot
-        self.ortalama = round((vizenot * 0.4) + (finalnot * 0.6), 2)
+        self.ortalama = (vizenot * 0.4) + (finalnot * 0.6), 2)
 
     def to_dict(self):
         return {
@@ -32,7 +31,6 @@ class Ogrenci:
             "Ortalama": self.ortalama
         }
 
-# Öğrenci Verileri
 students = [
     Ogrenci(1, "Ahmet", "Yılmaz", 40, 60),
     Ogrenci(2, "Ayşe", "Kara", 70, 80),
@@ -40,11 +38,9 @@ students = [
     Ogrenci(4, "Elif", "Çelik", 30, 50)
 ]
 
-# DataFrame oluşturma
 data = [student.to_dict() for student in students]
 df = pd.DataFrame(data)
 
-# Streamlit Arayüzü
 st.title("📚 Öğrenci Yönetim Sistemi")
 
 menu = st.sidebar.radio("📋 Menü", ["Tüm Öğrenciler", "ID ile Öğrenci Bul", "Yeni Öğrenci Ekle"])
@@ -81,4 +77,3 @@ elif menu == "Yeni Öğrenci Ekle":
         else:
             st.error("⚠️ Lütfen tüm alanları doldurunuz!")
 
-# Not: Kalıcı veri kaydı için bir veritabanı veya dosya sistemi entegrasyonu gerekir.
